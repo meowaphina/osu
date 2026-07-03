@@ -48,6 +48,16 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         private BindableList<HitObject> selectedItems { get; } = new BindableList<HitObject>();
 
+        private ExpressionalFeature[] features =>
+        [
+            ExpressionalFeature.Variable(() => scaleHandler.X, "x", "X"),
+            ExpressionalFeature.Variable(() => scaleHandler.Y, "y", "Y"),
+
+            // TODO: Localise this or maybe not I dont know if its needed
+            ExpressionalFeature.Variable(() => scaleHandler.Width, "width", "Height"),
+            ExpressionalFeature.Variable(() => scaleHandler.Height, "width", "Height")
+        ];
+
         public PreciseScalePopover(OsuSelectionScaleHandler scaleHandler, OsuGridToolboxGroup gridToolbox)
         {
             this.scaleHandler = scaleHandler;
@@ -70,7 +80,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    scaleInput = new ExpressionalSliderBar<float>
+                    scaleInput = new ExpressionalSliderBar<float>(features)
                     {
                         Caption = "Scale",
                         Current = scaleInputBindable = new BindableNumber<float>

@@ -22,5 +22,17 @@ namespace osu.Game.Graphics.UserInterfaceV2.Expressional
                     .ToList()
                     .ForEach(i => expression.Parameters[i] = value)
             );
+
+        public static ExpressionalFeature Variable<T>(string identifier, Func<T> supplier) =>
+            new ExpressionalFeature(expression =>
+                expression.DynamicParameters[identifier] = _ => supplier()
+            );
+
+        public static ExpressionalFeature Variable<T>(Func<T> supplier, params string[] identifiers) =>
+            new ExpressionalFeature(expression =>
+                identifiers
+                    .ToList()
+                    .ForEach(i => expression.DynamicParameters[i] = _ => supplier())
+            );
     }
 }

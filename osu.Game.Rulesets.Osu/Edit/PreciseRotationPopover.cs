@@ -46,6 +46,16 @@ namespace osu.Game.Rulesets.Osu.Edit
             AllowableAnchors = new[] { Anchor.CentreLeft, Anchor.CentreRight };
         }
 
+        private ExpressionalFeature[] features =>
+        [
+            ExpressionalFeature.Variable(() => rotationHandler.X, "x", "X"),
+            ExpressionalFeature.Variable(() => rotationHandler.Y, "y", "Y"),
+
+            // TODO: Localise this or maybe not I dont know if its needed
+            ExpressionalFeature.Variable(() => rotationHandler.Width, "width", "Height"),
+            ExpressionalFeature.Variable(() => rotationHandler.Height, "width", "Height")
+        ];
+
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
         {
@@ -58,7 +68,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    angleInput = new ExpressionalSliderBar<float>
+                    angleInput = new ExpressionalSliderBar<float>(features)
                     {
                         Caption = "Angle (degrees)",
                         Current = new BindableNumber<float>

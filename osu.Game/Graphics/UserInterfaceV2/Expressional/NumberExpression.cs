@@ -2,19 +2,21 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Linq;
 using System.Numerics;
+using AutoMapper.Internal;
 
 namespace osu.Game.Graphics.UserInterfaceV2.Expressional
 {
     public partial class NumberExpression<T> : Expressional<T>
         where T : INumber<T>
     {
-        public static ExpressionalFeature[] Features() =>
+        public static ExpressionalFeature[] Features =>
         [
-            ..Constants()
+            ..Constants
         ];
 
-        public static ExpressionalFeature[] Constants() =>
+        public static ExpressionalFeature[] Constants =>
         [
             ExpressionalFeature.Constant(Math.PI, "pi", "π"),
             ExpressionalFeature.Constant(Math.Tau, "tau", "τ"),
@@ -37,7 +39,9 @@ namespace osu.Game.Graphics.UserInterfaceV2.Expressional
         public NumberExpression(string? defaultExpression = null,
                                 Func<object?, T>? coalesce = null,
                                 ExpressionalFeature[]? features = null)
-            : base(defaultExpression, features ?? Features())
+            : base(defaultExpression,
+                Features.Concat(features ?? []).ToArray()
+            )
         {
             this.coalesce = coalesce ?? Expressional.Coalesce.Cast<T>();
         }

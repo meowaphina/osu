@@ -1,7 +1,9 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System.Linq;
 using System.Numerics;
+using AutoMapper.Internal;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 
@@ -10,7 +12,28 @@ namespace osu.Game.Graphics.UserInterfaceV2.Expressional
     public partial class ExpressionalSliderBar<T> : FormSliderBar<T>
         where T : struct, INumber<T>, IMinMaxValue<T>
     {
-        public NumberExpression<T> Expression { get; } = new NumberExpression<T>();
+        public ExpressionalFeature[] Features =>
+        [
+            ExpressionalFeature.Variable(() => Previous, "previous", "Previous")
+        ];
+
+        public NumberExpression<T> Expression { get; }
+        public T Previous { get; private set; }
+
+        public ExpressionalSliderBar(params ExpressionalFeature[] features)
+        {
+            Expression = new NumberExpression<T>(null, null,
+                features
+                    .Concat(Features)
+                    .ToArray());
+
+            Previous = Current.Value;
+
+            Current.ValueChanged += @event =>
+            {
+                Previous = @event.OldValue;
+            };
+        }
 
         protected override T? InternallyUpdate(string contents)
         {

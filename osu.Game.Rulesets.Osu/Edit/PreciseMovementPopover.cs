@@ -48,6 +48,12 @@ namespace osu.Game.Rulesets.Osu.Edit
             AllowableAnchors = new[] { Anchor.CentreLeft, Anchor.CentreRight };
         }
 
+        private ExpressionalFeature[] features =>
+        [
+            ExpressionalFeature.Variable(() => xBindable.Value, "x", "X"),
+            ExpressionalFeature.Variable(() => yBindable.Value, "y", "Y")
+        ];
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -58,7 +64,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    xInput = new ExpressionalSliderBar<float>
+                    xInput = new ExpressionalSliderBar<float>(features)
                     {
                         Caption = "X",
                         Current = xBindable = new BindableNumber<float>
