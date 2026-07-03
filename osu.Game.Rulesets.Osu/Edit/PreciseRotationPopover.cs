@@ -51,9 +51,8 @@ namespace osu.Game.Rulesets.Osu.Edit
             ExpressionalFeature.Variable(() => rotationHandler.X, "x", "X"),
             ExpressionalFeature.Variable(() => rotationHandler.Y, "y", "Y"),
 
-            // TODO: Localise this or maybe not I dont know if its needed
-            ExpressionalFeature.Variable(() => rotationHandler.Width, "width", "Height"),
-            ExpressionalFeature.Variable(() => rotationHandler.Height, "width", "Height")
+            ExpressionalFeature.Variable(() => rotationHandler.Width, "w", "width", "Height"),
+            ExpressionalFeature.Variable(() => rotationHandler.Height, "h", "height", "Height")
         ];
 
         [BackgroundDependencyLoader]

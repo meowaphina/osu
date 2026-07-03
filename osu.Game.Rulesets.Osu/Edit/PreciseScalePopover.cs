@@ -53,9 +53,8 @@ namespace osu.Game.Rulesets.Osu.Edit
             ExpressionalFeature.Variable(() => scaleHandler.X, "x", "X"),
             ExpressionalFeature.Variable(() => scaleHandler.Y, "y", "Y"),
 
-            // TODO: Localise this or maybe not I dont know if its needed
-            ExpressionalFeature.Variable(() => scaleHandler.Width, "width", "Height"),
-            ExpressionalFeature.Variable(() => scaleHandler.Height, "width", "Height")
+            ExpressionalFeature.Variable(() => rotationHandler.Width, "w", "width", "Height"),
+            ExpressionalFeature.Variable(() => rotationHandler.Height, "h", "height", "Height")
         ];
 
         public PreciseScalePopover(OsuSelectionScaleHandler scaleHandler, OsuGridToolboxGroup gridToolbox)
