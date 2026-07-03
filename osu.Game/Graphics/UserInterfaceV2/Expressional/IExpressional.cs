@@ -8,7 +8,7 @@ namespace osu.Game.Graphics.UserInterfaceV2.Expressional
 {
     public interface IExpressional<out T>
     {
-        public Bindable<Expression> Expression { get; }
+        Bindable<Expression> Expression { get; }
 
         T Express();
 
