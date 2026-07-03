@@ -43,7 +43,7 @@ namespace osu.Game.Graphics.UserInterfaceV2.Expressional
                 Features.Concat(features ?? []).ToArray()
             )
         {
-            this.coalesce = coalesce ?? Expressional.Coalesce.Cast<T>();
+            this.coalesce = coalesce ?? Expressional.Coalescence.Cast<T>();
         }
 
         public override T Coalesce(object? result) => coalesce(result);
