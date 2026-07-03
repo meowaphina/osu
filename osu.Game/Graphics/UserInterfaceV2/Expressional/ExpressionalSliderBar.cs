@@ -14,7 +14,8 @@ namespace osu.Game.Graphics.UserInterfaceV2.Expressional
     {
         public ExpressionalFeature[] Features =>
         [
-            ExpressionalFeature.Variable(() => Previous, "previous", "Previous")
+            ExpressionalFeature.Variable(() => Previous,
+                "p", "previous", "o", "old", "l", "last")
         ];
 
         public NumberExpression<T> Expression { get; }
