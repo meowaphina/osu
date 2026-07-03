@@ -13,6 +13,7 @@ using osu.Framework.Input.Events;
 using osu.Game.Configuration;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterfaceV2;
+using osu.Game.Graphics.UserInterfaceV2.Expressional;
 using osu.Game.Input.Bindings;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Osu.Objects;
@@ -32,7 +33,7 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         private readonly Bindable<PreciseScaleInfo> scaleInfo = new Bindable<PreciseScaleInfo>(new PreciseScaleInfo(1, EditorOrigin.GridCentre, true, true));
 
-        private FormSliderBar<float> scaleInput { get; set; } = null!;
+        private ExpressionalSliderBar<float> scaleInput { get; set; } = null!;
         private BindableNumber<float> scaleInputBindable = null!;
         private EditorRadioButtonCollection scaleOrigin = null!;
 
@@ -69,7 +70,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    scaleInput = new FormSliderBar<float>
+                    scaleInput = new ExpressionalSliderBar<float>
                     {
                         Caption = "Scale",
                         Current = scaleInputBindable = new BindableNumber<float>

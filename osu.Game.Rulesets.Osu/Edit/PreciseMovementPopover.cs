@@ -15,6 +15,7 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Events;
 using osu.Game.Extensions;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Graphics.UserInterfaceV2.Expressional;
 using osu.Game.Input.Bindings;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
@@ -37,7 +38,9 @@ namespace osu.Game.Rulesets.Osu.Edit
         private BindableNumber<float> xBindable = null!;
         private BindableNumber<float> yBindable = null!;
 
-        private FormSliderBar<float> xInput { get; set; } = null!;
+        private ExpressionalSliderBar<float> xInput { get; set; } = null!;
+        private ExpressionalSliderBar<float> yInput { get; set; } = null!;
+
         private OsuCheckbox relativeCheckbox = null!;
 
         public PreciseMovementPopover()
@@ -55,7 +58,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    xInput = new FormSliderBar<float>
+                    xInput = new ExpressionalSliderBar<float>
                     {
                         Caption = "X",
                         Current = xBindable = new BindableNumber<float>
@@ -64,7 +67,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                         },
                         TabbableContentContainer = this
                     },
-                    new FormSliderBar<float>
+                    yInput = new ExpressionalSliderBar<float>
                     {
                         Caption = "Y",
                         Current = yBindable = new BindableNumber<float>

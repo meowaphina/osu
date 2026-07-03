@@ -247,18 +247,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
                                     AutoSizeAxes = Axes.Y,
                                     Children = new Drawable[]
                                     {
-                                        textBox = new FormNumberBox.InnerNumberBox(allowDecimals: true)
-                                        {
-                                            RelativeSizeAxes = Axes.X,
-                                            // the textbox is hidden when the control is unfocused,
-                                            // but clicking on the label should reach the textbox,
-                                            // therefore make it always present.
-                                            AlwaysPresent = true,
-                                            CommitOnFocusLost = true,
-                                            SelectAllOnFocus = true,
-                                            OnInputError = background.FlashOnInputError,
-                                            TabbableContentContainer = tabbableContentContainer,
-                                        },
+                                        textBox = CreateTextBox(background, tabbableContentContainer),
                                         valueLabel = new TruncatingSpriteText
                                         {
                                             RelativeSizeAxes = Axes.X,
@@ -282,6 +271,20 @@ namespace osu.Game.Graphics.UserInterfaceV2
             if (game != null)
                 currentLanguage.BindTo(game.CurrentLanguage);
         }
+
+        internal virtual FormTextBox.InnerTextBox CreateTextBox(FormControlBackground background, CompositeDrawable? tabbableContentContainer) =>
+            new FormNumberBox.InnerNumberBox(allowDecimals: true)
+            {
+                RelativeSizeAxes = Axes.X,
+                // the textbox is hidden when the control is unfocused,
+                // but clicking on the label should reach the textbox,
+                // therefore make it always present.
+                AlwaysPresent = true,
+                CommitOnFocusLost = true,
+                SelectAllOnFocus = true,
+                OnInputError = background.FlashOnInputError,
+                TabbableContentContainer = tabbableContentContainer,
+            };
 
         protected override void LoadComplete()
         {
@@ -310,16 +313,21 @@ namespace osu.Game.Graphics.UserInterfaceV2
             }, true);
         }
 
-        private bool updatingFromTextBox;
+        private bool updating;
 
-        private void textChanged(ValueChangedEvent<string> change)
-        {
-            tryUpdateSliderFromTextBox();
-        }
+        private Func<bool>[] fromTextBox =>
+        [
+            tryUpdatingDirectlyFromTextBox,
+            tryUpdatingByDelegation
+        ];
+
+        private void textChanged(ValueChangedEvent<string> change) =>
+            updateSlider(fromTextBox);
 
         private void textCommitted(TextBox t, bool isNew)
         {
-            tryUpdateSliderFromTextBox();
+            updateSlider(fromTextBox);
+
             // If the attempted update above failed, restore text box to match the slider.
             currentNumberInstantaneous.TriggerChange();
             current.Value = currentNumberInstantaneous.Value;
@@ -327,10 +335,25 @@ namespace osu.Game.Graphics.UserInterfaceV2
             background.FlashOnCommit();
         }
 
-        private void tryUpdateSliderFromTextBox()
-        {
-            updatingFromTextBox = true;
+        private void beginUpdating() => updating = true;
 
+        private void commitUpdate() => updating = false;
+
+        private void updateSlider(Func<bool>[] updates, bool commitAll = true)
+        {
+            beginUpdating();
+
+            foreach (Func<bool> update in updates)
+            {
+                if (update() && !commitAll)
+                    break;
+            }
+
+            commitUpdate();
+        }
+
+        private bool tryUpdatingDirectlyFromTextBox()
+        {
             try
             {
                 switch (currentNumberInstantaneous)
@@ -354,12 +377,28 @@ namespace osu.Game.Graphics.UserInterfaceV2
             }
             catch
             {
+                return false;
+
                 // ignore parsing failures.
                 // sane state will eventually be restored by a commit (either explicit, or implicit via focus loss).
             }
 
-            updatingFromTextBox = false;
+            return true;
         }
+
+        private bool tryUpdatingByDelegation()
+        {
+            T? result = InternallyUpdate(textBox.Current.Value);
+
+            if (result == null)
+                return false;
+
+            currentNumberInstantaneous.Value = result.Value;
+
+            return true;
+        }
+
+        protected virtual T? InternallyUpdate(string contents) => null;
 
         protected override bool OnHover(HoverEvent e)
         {
@@ -404,7 +443,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
 
         private void updateValueDisplay()
         {
-            if (updatingFromTextBox) return;
+            if (updating) return;
 
             if (DisplayAsPercentage)
             {

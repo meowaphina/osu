@@ -12,6 +12,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Game.Configuration;
 using osu.Game.Graphics.UserInterfaceV2;
+using osu.Game.Graphics.UserInterfaceV2.Expressional;
 using osu.Game.Input.Bindings;
 using osu.Game.Rulesets.Osu.UI;
 using osu.Game.Screens.Edit.Components.RadioButtons;
@@ -28,7 +29,7 @@ namespace osu.Game.Rulesets.Osu.Edit
 
         private readonly Bindable<PreciseRotationInfo> rotationInfo = new Bindable<PreciseRotationInfo>(new PreciseRotationInfo(0, EditorOrigin.GridCentre));
 
-        private FormSliderBar<float> angleInput { get; set; } = null!;
+        private ExpressionalSliderBar<float> angleInput { get; set; } = null!;
         private EditorRadioButtonCollection rotationOrigin = null!;
 
         private RadioButton gridCentreButton = null!;
@@ -57,7 +58,7 @@ namespace osu.Game.Rulesets.Osu.Edit
                 Spacing = new Vector2(5),
                 Children = new Drawable[]
                 {
-                    angleInput = new FormSliderBar<float>
+                    angleInput = new ExpressionalSliderBar<float>
                     {
                         Caption = "Angle (degrees)",
                         Current = new BindableNumber<float>
