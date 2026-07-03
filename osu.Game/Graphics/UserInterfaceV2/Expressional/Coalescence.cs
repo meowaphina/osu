@@ -5,7 +5,7 @@ using System;
 
 namespace osu.Game.Graphics.UserInterfaceV2.Expressional
 {
-    public static class Coalesce
+    public static class Coalescence
     {
         public static Func<object?, T> Cast<T>() =>
             result => result is T value
